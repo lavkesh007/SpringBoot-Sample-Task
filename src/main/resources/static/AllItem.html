@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 80%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #4f46e5;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f1f1f1;
+        }
+
+        .no-data {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+        }
+
+        .back-btn {
+            display: block;
+            width: fit-content;
+            margin: 30px auto;
+            padding: 10px 25px;
+            background: #22c55e;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: #16a34a;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📦 All Products</h1>
+
+<table id="productTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<p class="no-data" id="noData" style="display:none;">No products available</p>
+
+<a href="index.html" class="back-btn">⬅ Back</a>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        fetch("/item/products")
+            .then(res => res.json())
+            .then(data => {
+                const tableBody = document.querySelector("#productTable tbody");
+                const noData = document.getElementById("noData");
+
+                if (!data || data.length === 0) {
+                    noData.style.display = "block";
+                    return;
+                }
+
+                data.forEach(product => {
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${product.id}</td>
+                        <td>${product.Name}</td>
+                        <td>${product.Description}</td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Failed to load products");
+            });
+    });
+</script>
+
+</body>
+</html>

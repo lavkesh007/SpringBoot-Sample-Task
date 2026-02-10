@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Find Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f7;
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 40px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 12px 0;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3730a3;
+        }
+
+        .result {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .card {
+            padding: 15px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid #ddd;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .back-btn {
+            display: block;
+            margin: 25px auto 0;
+            text-align: center;
+            text-decoration: none;
+            color: #22c55e;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🔍 Find Product by ID</h1>
+
+<div class="container">
+    <input type="number" id="productId" placeholder="Enter Product ID" />
+    <button onclick="getProduct()">Get Product</button>
+
+    <div class="result" id="result">
+        <div class="card">
+            <p><strong>ID:</strong> <span id="resId"></span></p>
+            <p><strong>Name:</strong> <span id="resName"></span></p>
+            <p><strong>Description:</strong> <span id="resDesc"></span></p>
+        </div>
+    </div>
+
+    <p class="error" id="error">Product not found</p>
+
+    <a href="index.html" class="back-btn">⬅ Back</a>
+</div>
+
+<script>
+    function getProduct() {
+        const id = document.getElementById("productId").value;
+        const result = document.getElementById("result");
+        const error = document.getElementById("error");
+
+        result.style.display = "none";
+        error.style.display = "none";
+
+        if (!id) {
+            alert("Please enter product ID");
+            return;
+        }
+
+        fetch(`/item/product/${id}`)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error("Not found");
+                }
+                return res.json();
+            })
+            .then(product => {
+                if (!product) {
+                    error.style.display = "block";
+                    return;
+                }
+
+                document.getElementById("resId").textContent = product.id;
+                document.getElementById("resName").textContent = product.Name;
+                document.getElementById("resDesc").textContent = product.Description;
+
+                result.style.display = "block";
+            })
+            .catch(() => {
+                error.style.display = "block";
+            });
+    }
+</script>
+
+</body>
+</html>
